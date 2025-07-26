@@ -1,0 +1,93 @@
+# This workflow checks ensures that the head branch in a PR against the main branch is either
+# a release branch or a hotfix branch
+name: check_branch_is_either_release_or_hotfix
+
+on:
+  pull_request:
+    branches:
+      - main
+
+env:
+  DBX_ENV: dev
+
+jobs:
+  check_release_or_hotfix:
+    environment: dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+    
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Check that head branch is either release or hotfix
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$GITHUB_WORKSPACE
+          python ./.github/scripts/check_release_hotfix_branch.py \
+          --branch-name $GITHUB_HEAD_REF
+
+      - name: Deploy code as a Databricks Repos
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$GITHUB_WORKSPACE
+          python ./.github/scripts/deploy_code.py \
+          --host ${{vars.DATABRICKS_HOST}} \
+          --tenant-id ${{secrets.TENANT_ID}} \
+          --spn-client-id ${{secrets.SPN_CLIENT_ID}} \
+          --spn-client-secret ${{secrets.SPN_CLIENT_SECRET}} \
+          --repository ${{vars.ORG_NAME}}/${GITHUB_REPOSITORY##*/} \
+          --branch-name $GITHUB_HEAD_REF \
+          --env $DBX_ENV \
+          --deployment-type automatic \
+          --integration-test true
+      
+      - name: Create or update Databricks workflows, DLT pipeline, and cluster for the integration tests
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$GITHUB_WORKSPACE
+          python ./.github/scripts/create_jobs.py \
+          --host ${{vars.DATABRICKS_HOST}} \
+          --tenant-id ${{secrets.TENANT_ID}} \
+          --spn-client-id ${{secrets.SPN_CLIENT_ID}} \
+          --spn-client-secret ${{secrets.SPN_CLIENT_SECRET}} \
+          --repository ${{vars.ORG_NAME}}/${GITHUB_REPOSITORY##*/} \
+          --branch-name $GITHUB_HEAD_REF \
+          --timeout 3600 \
+          --env $DBX_ENV \
+          --deployment-type automatic \
+          --integration-test true
+      
+      # TODO: use "read" permissions only for specific group
+      # necessary so that users can see the output of the integration tests
+      - name: Set open permissions on Repos, workflows, DlT pipeline, and clusters
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$GITHUB_WORKSPACE
+          python ./.github/scripts/set_open_permissions.py \
+          --host ${{vars.DATABRICKS_HOST}} \
+          --tenant-id ${{secrets.TENANT_ID}} \
+          --spn-client-id ${{secrets.SPN_CLIENT_ID}} \
+          --spn-client-secret ${{secrets.SPN_CLIENT_SECRET}} \
+          --repository ${{vars.ORG_NAME}}/${GITHUB_REPOSITORY##*/} \
+          --branch-name $GITHUB_HEAD_REF \
+          --env $DBX_ENV \
+          --deployment-type automatic \
+          --integration-test true
+      
+      - name: Run integration tests
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$GITHUB_WORKSPACE
+          python ./.github/scripts/run_integration_tests_workflow.py \
+          --host ${{vars.DATABRICKS_HOST}} \
+          --tenant-id ${{secrets.TENANT_ID}} \
+          --spn-client-id ${{secrets.SPN_CLIENT_ID}} \
+          --spn-client-secret ${{secrets.SPN_CLIENT_SECRET}} \
+          --repository ${{vars.ORG_NAME}}/${GITHUB_REPOSITORY##*/} \
+          --branch-name $GITHUB_HEAD_REF \
+          --deployment-type automatic
+        timeout-minutes: 60

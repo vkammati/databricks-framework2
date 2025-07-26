@@ -1,0 +1,63 @@
+# This workflow is called by other workflows. It will run pretty much every time there is a push to any branch.
+# It runs unit tests with pytest and code quality checks with SonarQube.
+name: base_tests
+
+on:
+  # necessary to be a reusable workflow, see https://docs.github.com/en/actions/using-workflows/reusing-workflows
+  workflow_call:
+    # these secrets will be passed by the calling workflow
+    secrets:
+      SONAR_HOST_URL:
+        required: true
+      SONAR_TOKEN:
+        required: true
+
+jobs:
+  run_unit_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install Python dependencies necessary for unit tests
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: Run unit tests and compute code coverage with pytest 
+        run: |
+          pytest \
+          --cov=./datta_pipeline_library \
+          --cov-branch \
+          --cov-report term-missing \
+          --cov-report xml:./logs/coverage.xml \
+          --junit-xml=./logs/pytest.xml \
+          -o junit_suite_name=pipeline
+          
+      # Necessary so that SonarQube can pick up the coverage file created by pytest
+      # see https://dev.to/remast/go-for-sonarcloud-with-github-actions-3pmn
+      # see also docs/cicd/sonarqube.md
+      - name: update coverage file
+        run: |
+          sed -i "s+$GITHUB_WORKSPACE+/github/workspace+g" $GITHUB_WORKSPACE/logs/coverage.xml
+      
+      - name: Check code quality with SonarQube
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
+          SONAR_HOST_URL: ${{secrets.SONAR_HOST_URL}}
+          
+      - name: Get SonarQube code quality checks results
+        id: sonarqube-quality-gate-check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        timeout-minutes: 10
+        env:
+         SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
+         SONAR_HOST_URL: ${{secrets.SONAR_HOST_URL}}

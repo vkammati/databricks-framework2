@@ -1,0 +1,56 @@
+# This manual workflow is used to deploy prod branches to the prd environment with
+# the necessary jobs/pipelines/clusters.
+name: manually_deploy_to_prd
+
+on:
+  # necessary to have a manual workflow, see https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onworkflow_dispatch
+  workflow_dispatch
+
+env:
+  DBX_ENV: prd
+  # Add a blank space between email addresses. These email addresses will be notified when the workflow in production fails
+  EMAILS: GX-SBOBNG-DLT-Team@shell.com
+  
+jobs:
+  manually_deploy_to_prd:
+    environment: prd
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+      
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: Deploy code as a Databricks Repos
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$GITHUB_WORKSPACE
+          python ./.github/scripts/deploy_code.py \
+          --host ${{vars.DATABRICKS_HOST}} \
+          --tenant-id ${{secrets.TENANT_ID}} \
+          --spn-client-id ${{secrets.SPN_CLIENT_ID}} \
+          --spn-client-secret ${{secrets.SPN_CLIENT_SECRET}} \
+          --repository ${{vars.ORG_NAME}}/${GITHUB_REPOSITORY##*/} \
+          --branch-name $GITHUB_REF_NAME \
+          --env $DBX_ENV
+      
+      # NB: we use the prd conf
+      - name: Create Databricks workflows, DLT pipeline, and clusters
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$GITHUB_WORKSPACE
+          python ./.github/scripts/create_jobs.py \
+          --host ${{vars.DATABRICKS_HOST}} \
+          --tenant-id ${{secrets.TENANT_ID}} \
+          --spn-client-id ${{secrets.SPN_CLIENT_ID}} \
+          --spn-client-secret ${{secrets.SPN_CLIENT_SECRET}} \
+          --repository ${{vars.ORG_NAME}}/${GITHUB_REPOSITORY##*/} \
+          --branch-name $GITHUB_REF_NAME \
+          --emails $EMAILS \
+          --env $DBX_ENV

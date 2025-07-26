@@ -1,0 +1,59 @@
+# This workflow deletes every resources that were created in the dev, tst, and pre environments when
+# running integration tests for the branch used in the pull request.
+# Resources: Databricks Repos, workflows, DLT pipeline, cluster, ADLS folders, Unity Catalog schemas and tables
+#
+# NB: if the branch has never been manually deployed to the dev environment, the script will exit immediately
+name: reset_envs_after_merging_to_main
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+jobs:
+  reset_dev:
+    environment: dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+      
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Reset (manual) dev environment
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$GITHUB_WORKSPACE
+          python ./.github/scripts/reset_databricks_env.py \
+          --host ${{vars.DATABRICKS_HOST}} \
+          --tenant-id ${{secrets.TENANT_ID}} \
+          --spn-client-id ${{secrets.SPN_CLIENT_ID}} \
+          --spn-client-secret ${{secrets.SPN_CLIENT_SECRET}} \
+          --repository ${{vars.ORG_NAME}}/${GITHUB_REPOSITORY##*/} \
+          --branch-name $GITHUB_HEAD_REF \
+          --env dev \
+          --deployment-type manual \
+          --timeout 1800
+
+      - name: Reset (automatic) dev environment
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$GITHUB_WORKSPACE
+          python ./.github/scripts/reset_databricks_env.py \
+          --host ${{vars.DATABRICKS_HOST}} \
+          --tenant-id ${{secrets.TENANT_ID}} \
+          --spn-client-id ${{secrets.SPN_CLIENT_ID}} \
+          --spn-client-secret ${{secrets.SPN_CLIENT_SECRET}} \
+          --repository ${{vars.ORG_NAME}}/${GITHUB_REPOSITORY##*/} \
+          --branch-name $GITHUB_HEAD_REF \
+          --env dev \
+          --deployment-type automatic \
+          --timeout 1800

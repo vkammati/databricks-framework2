@@ -1,0 +1,43 @@
+# This workflow deletes every resources that were created in the dev environment.
+# Resources: Databricks Repos, workflows, DLT pipeline, cluster, ADLS folders, Unity Catalog schemas and tables
+name: manually_reset_dev
+
+on:
+  # necessary to have a manual workflow, see https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onworkflow_dispatch
+  workflow_dispatch
+
+env:
+  DBX_ENV: dev
+
+jobs:
+  reset_dev:
+    environment: dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+           python-version: "3.9"
+      
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      # if the branch has never been manually deployed to the dev environment, the script will exit immediately
+      - name: Reset environment
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$GITHUB_WORKSPACE
+          python ./.github/scripts/reset_databricks_env.py \
+          --host ${{vars.DATABRICKS_HOST}} \
+          --tenant-id ${{secrets.TENANT_ID}} \
+          --spn-client-id ${{secrets.SPN_CLIENT_ID}} \
+          --spn-client-secret ${{secrets.SPN_CLIENT_SECRET}} \
+          --repository ${{vars.ORG_NAME}}/${GITHUB_REPOSITORY##*/} \
+          --branch-name $GITHUB_REF_NAME \
+          --env $DBX_ENV \
+          --deployment-type manual \
+          --timeout 1800

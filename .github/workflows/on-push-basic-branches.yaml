@@ -1,0 +1,11 @@
+# This workflow runs unit tests with pytest and code quality checks with SonarQube
+name: on_push_basic_branches
+
+on: push
+  
+jobs:
+  base_tests:
+    # reuse base-tests reusable workflow
+    uses: ./.github/workflows/base-tests.yaml
+    # pass environment secrets down to the reusable workflow (it requires SONAR_HOST_URL and SONAR_TOKEN)
+    secrets: inherit

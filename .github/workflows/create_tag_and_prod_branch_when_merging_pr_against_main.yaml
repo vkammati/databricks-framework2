@@ -1,0 +1,50 @@
+# This workflow creates a prod tag and branch after merging a pull request
+# from a release branch to the main branch.
+#
+# NB: the best practice would be to use tags in production, unfortunately there
+# is a known Databricks UI gap when displaying the tag name with Repos ("detached"
+# will be displayed instead of the tag name, which is not great to know which
+# codebase version is deployed). We will use tags once that gap is fixed. In the
+# meantime, we will use long-lived production branches to deploy to the prd
+# environment, while still creating tags to be forward-compatible with the fix.
+#
+# NB: the commit sha used to create the tag and the branch is the last one from
+# the release branch, meaning that the codebase that was sent to the tst and pre
+# environments will be the same codebase that will be sent to the prd environment.
+name: create_tag_and_prod_branch_when_merging_pr_against_main
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      # NB: the "closed" type encompasses both merging a PR and closing a PR, we then
+      # need to check later in the job that it is indeed merged
+      - closed
+
+jobs:
+  if_merged:
+    # make sure that the PR is indeed merged and not closed
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: check out repository code
+        uses: actions/checkout@v3
+      
+      - name: create prod branch
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$GITHUB_WORKSPACE
+          python ./.github/scripts/create_branch.py \
+          --repo $GITHUB_REPOSITORY \
+          --gh-token ${{ secrets.GH_TOKEN }} \
+          --sha ${{ github.event.pull_request.head.sha }} \
+          --head-branch $GITHUB_HEAD_REF
+          
+      - name: create prod tag
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$GITHUB_WORKSPACE
+          python ./.github/scripts/create_tag.py \
+          --repo $GITHUB_REPOSITORY \
+          --gh-token ${{ secrets.GH_TOKEN }} \
+          --sha ${{ github.event.pull_request.head.sha }} \
+          --head-branch $GITHUB_HEAD_REF
