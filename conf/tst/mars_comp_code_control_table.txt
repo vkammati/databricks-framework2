@@ -1,0 +1,9 @@
+%sql
+CREATE TABLE `cross_ds-unitycatalog-tst`.`curated-fcb`.mars_comp_code_control_table (
+  Company_Code STRING,
+  Ingested_At TIMESTAMP,
+  Ingested_By STRING,
+  Active_Flag STRING
+  )
+USING delta
+LOCATION 'abfss://deltalake@azdna312eunadlslifwiyswa.dfs.core.windows.net/curated/fcb_tst/MARS_COMP_CODE_CONTROL_TABLE';

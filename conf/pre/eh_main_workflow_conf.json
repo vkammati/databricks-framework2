@@ -1,0 +1,50 @@
+{
+  "name": "{{ eh_main_workflow_name }}",
+  "email_notifications": {
+    "on_failure": [
+        "GX-SBOBNG-DLT-Team@shell.com"
+      ],
+      "no_alert_for_skipped_runs": false
+  },
+  "max_concurrent_runs": 1,
+  "format": "MULTI_TASK",
+  "queue": {
+      "enabled": true
+  },
+  "tags": {
+      "workflow_project": "DATTA-FCB-CURATED-EH-MAIN"
+  },
+  "tasks": [
+    {
+        "task_key": "sede-x-DATTA-FI-EH-workflow",
+        "run_if": "ALL_SUCCESS",
+        "run_job_task": {
+          "job_id": "{{ fi_eh_job_id }}"
+        },
+        "timeout_seconds": 0,
+        "email_notifications": {},
+        "notification_settings": {
+          "no_alert_for_skipped_runs": false,
+          "no_alert_for_canceled_runs": false,
+          "alert_on_last_attempt": false
+        },
+        "webhook_notifications": {}
+      },
+      {
+        "task_key": "sede-x-DATTA-MD-EH-workflow",
+        "run_if": "ALL_SUCCESS",
+        "run_job_task": {
+          "job_id": "{{ md_eh_job_id }}"
+        },
+        "timeout_seconds": 0,
+        "email_notifications": {},
+        "notification_settings": {
+          "no_alert_for_skipped_runs": false,
+          "no_alert_for_canceled_runs": false,
+          "alert_on_last_attempt": false
+        },
+        "webhook_notifications": {}
+      }
+  ],
+  "timeout_seconds": 0
+}

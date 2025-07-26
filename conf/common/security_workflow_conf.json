@@ -1,0 +1,116 @@
+{
+  "name": "{{ security_workflow_name }}",
+  "email_notifications": {
+      "on_failure": [
+        "GX-SBOBNG-DLT-Team@shell.com"
+      ],
+      "no_alert_for_skipped_runs": false
+    },
+  "max_concurrent_runs": 1,
+  "format": "MULTI_TASK",
+  "queue": {
+      "enabled": true
+  },
+  "tags": {
+      "workflow_project": "DATTA-FCB-CURATED-SECURITY"
+  },
+  "tasks": [
+    {
+        "task_key": "fcb_view_creation",
+        "run_if": "ALL_SUCCESS",
+        "notebook_task": {
+          "notebook_path": "{{ repos_path }}/datta_pipeline_library/transformation/eh_curated/fcb_security_view",
+          "base_parameters": {
+            "security_schema": "eh-ds-authorization",
+            "process_status_table_name": "process_status",
+            "process_status_view_name": "vw_config_gen_process_status",
+            "unique_repo_branch_id_schema": "",
+            "fcb_star_join_table_name": "use_case_fcb_dn_supply_margin",
+            "unique_repo_branch_id": "",
+            "fcb_view_name": "vw_use_case_fcb_dn_supply_margin",
+            "security_function_name": "sf_gen_rls_security",
+            "repos_path": "{{ repos_path }}",
+            "env": "{{ env }}"
+          },
+          "source": "WORKSPACE"
+        },
+        "job_cluster_key": "sede-x-DATTA-FCB-CURATED-security-workflow_job_cluster",
+        "timeout_seconds": 0,
+        "email_notifications": {},
+        "notification_settings": {
+          "no_alert_for_skipped_runs": false,
+          "no_alert_for_canceled_runs": false,
+          "alert_on_last_attempt": false
+        },
+        "webhook_notifications": {}
+      },
+      {
+        "task_key": "fcb_dynamic_sql_function_creation",
+        "depends_on": [
+          {
+            "task_key": "fcb_view_creation"
+          }
+        ],
+        "run_if": "ALL_SUCCESS",
+        "notebook_task": {
+          "notebook_path": "{{ repos_path }}/datta_pipeline_library/transformation/eh_curated/fcb_dynamic_sql_function",
+          "base_parameters": {
+            "detailed_report_security_function_name": "sf_fcb_detailed_report",
+            "unique_repo_branch_id_schema": "",
+            "tfp_exception_security_function_name": "sf_fcb_tfp_exception",
+            "fcb_price_effect_security_function_name": "sf_fcb_price_effect",
+            "unique_repo_branch_id": "",
+            "fcb_dynamic_view_security_function_name": "sf_fcb_sfs_split_matrix",
+            "gains_and_losses_security_function_name": "sf_fcb_gains_and_losses",
+            "repos_path": "{{ repos_path }}",
+            "internal_transfers_security_function_name": "sf_fcb_internal_transfers",
+            "massbalance_per_commodity_grade_security_function_name": "sf_fcb_massbalance_per_comm_grade",
+            "fcb_per_commodity_grade_security_function_name": "sf_fcb_per_commodity_grade",
+            "fcb_dynamic_view_name": "vw_use_case_fcb_dn_supply_margin",
+            "env": "{{ env }}",
+            "fcb_stock_effect_security_function_name": "sf_fcb_stock_effect"
+          },
+          "source": "WORKSPACE"
+        },
+        "job_cluster_key": "sede-x-DATTA-FCB-CURATED-security-workflow_job_cluster",
+        "timeout_seconds": 0,
+        "email_notifications": {},
+        "notification_settings": {
+          "no_alert_for_skipped_runs": false,
+          "no_alert_for_canceled_runs": false,
+          "alert_on_last_attempt": false
+        },
+        "webhook_notifications": {}
+      } 
+  ],
+  "job_clusters": [
+      {
+        "job_cluster_key": "sede-x-DATTA-FCB-CURATED-security-workflow_job_cluster",
+        "new_cluster": {
+          "cluster_name": "",
+          "spark_version": "15.4.x-scala2.12",
+          "spark_conf": {
+            "spark.databricks.delta.preview.enabled": "true"
+          },
+          "azure_attributes": {
+            "first_on_demand": 1,
+            "availability": "ON_DEMAND_AZURE",
+            "spot_bid_max_price": -1
+          },
+          "node_type_id": "Standard_D4ds_v5",
+          "custom_tags": {
+            "Name": "DATTA-FCB-CURATED-SECURITY_JC",
+            "Environment": "{{ env }}"
+          },
+          "spark_env_vars": {
+            "PYSPARK_PYTHON": "/databricks/python3/bin/python3"
+          },
+          "enable_elastic_disk": true,
+          "data_security_mode": "USER_ISOLATION",
+          "runtime_engine": "STANDARD",
+          "num_workers": 2
+        }
+      }
+    ],
+  "timeout_seconds": 0
+}

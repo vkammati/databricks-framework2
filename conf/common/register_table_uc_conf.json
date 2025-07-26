@@ -1,0 +1,35 @@
+{
+    "name": "{{ job_name }}",
+    "email_notifications": {
+        "on_failure": {{ emails|tojson }},
+        "no_alert_for_skipped_runs": false
+    },
+    "timeout_seconds": 0,
+    "max_concurrent_runs": 200,
+    "tasks": [
+        {
+            "task_key": "UCRegister",
+            "notebook_task": {
+                "notebook_path": "{{ repos_path }}/dlt_pipelines/RegisterTable_Unity",
+                "base_parameters": {
+                    "assignTags": "False",
+                    "catalog": "dnastats",
+                    "path": "Path",
+                    "tags": "{'eds.dataQuality':'raw'}",
+                    "schema": "raw",
+                    "table": "cost_management",
+                    "tbl_owner": "tbl_owner",
+                    "tbl_read": "tbl_read"
+                },
+                "source": "WORKSPACE"
+            },
+            "existing_cluster_id": "{{ cluster_id }}",
+            "timeout_seconds": 0,
+            "email_notifications": {
+                "on_failure": {{ emails|tojson }},
+                "no_alert_for_skipped_runs": false
+            }
+        }
+    ],
+    "format": "MULTI_TASK"
+}

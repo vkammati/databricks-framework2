@@ -1,0 +1,9 @@
+%sql
+CREATE TABLE `cross_ds-unitycatalog-prd`.`curated-fcb`.mars_mvmt_type_control_table (
+  Movement_Type STRING,
+  Ingested_At TIMESTAMP,
+  Ingested_By STRING,
+  Active_Flag STRING
+  )
+USING delta
+LOCATION 'abfss://deltalake@azdna322eunadlslifozpfav.dfs.core.windows.net/curated/fcb_prd/MARS_MVMT_TYPE_CONTROL_TABLE';

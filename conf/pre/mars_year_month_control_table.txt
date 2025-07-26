@@ -1,0 +1,12 @@
+%sql
+CREATE TABLE `cross_ds-unitycatalog-pre`.`curated-fcb`.mars_year_month_control_table (
+  year STRING,
+  month STRING,
+  Ingested_At TIMESTAMP,
+  Ingested_By STRING,
+  Active_Flag STRING)
+USING delta
+LOCATION 'abfss://deltalake@azdna322eunadlslifozpfav.dfs.core.windows.net/curated/fcb_pre/MARS_YEAR_MONTH_CONTROL_TABLE'
+TBLPROPERTIES (
+  'delta.minReaderVersion' = '1',
+  'delta.minWriterVersion' = '2');

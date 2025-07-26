@@ -1,0 +1,8 @@
+%sql
+CREATE TABLE `cross_ds-unitycatalog-prd`.`curated-fcb`.mars_data_retention_period (
+  No_of_Months INT,
+  Ingested_At TIMESTAMP,
+  Ingested_By STRING,
+  Active_Flag STRING)
+USING delta
+LOCATION 'abfss://deltalake@azdna312eunadlslifwiyswa.dfs.core.windows.net/curated/fcb_prd/MARS_DATA_RETENTION_PERIOD';

@@ -1,0 +1,27 @@
+{
+    "env": "dev",
+    "kv_key": "kv_dev",
+    "spn_client_id_key": "AZ-AS-SPN-DATTA-CLIENT-ID",
+    "spn_client_secret_key": "AZ-AS-SPN-DATTA-CLIENT-SECRET",
+    "storage_account": "azdna312eunadlslifwiyswa",
+    "edc_user_id_key": "AZ-AS-EDC-DATTA-USERNAME",
+    "edc_user_pwd_key": "AZ-AS-EDC-DATTA-PASSWORD",
+    "api_url": "https://shell-dev.collibra.com/rest/2.0/outputModule/export/json",
+    "security_object_aad_group": "AZ-EDS-GRP-SG-N-DS-DEV-IT-PROJ-SECURITY",
+    "security_end_user_aad_group": "AZ-EDS-GRP-SG-N-DS-DEV-BUS-RA-FCB-RX",
+    "security_functional_dev_aad_group": "AZ-EDS-GRP-SG-N-DS-DEV-IT-PROJ-CURATED-FCB-RW",
+    "security_functional_readers_aad_group": "AZ-EDS-GRP-SG-N-DS-DEV-IT-SOM-FUNCTIONAL-RX",
+    "security_security_readers_aad_group": "AZ-EDS-GRP-SG-N-DS-DEV-IT-SOM-SECURITY-RX",
+    "security_mars_end_user_aad_group": "AZ-EDS-GRP-SG-N-DS-DEV-BUS-RA-MARS-RX",
+    "access_grp": {
+        "tbl_owner_grp": "AZ-DNA-GRP-DS-313-UC-RS-PROJECT-USER-CROSS_DS-DATTA-JZGDO",
+        "tbl_read_grp": "AZ-DNA-GRP-DS-313-UC-RS-PROJECT-USER-CROSS_DS-DATTA-JZGDO"
+    },    
+    "datta_subfolder_name":"DS_HANA_CDD",
+    "aecorsoft_datta_subfolder_name":"GSAP_ECC_C94",
+    "bw_datta_subfolder_name":"DS_GSAP_BW",
+    "workspace_url":"https://adb-695426772332595.15.azuredatabricks.net",
+    "data_governance_domain": "ds",
+    "data_area": "finance",
+    "use_case": "fcb"
+}

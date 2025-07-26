@@ -1,0 +1,319 @@
+{
+    "ViewConfig": {
+        "Resources": {
+            "Domain": {
+                "name": "Domain",
+                "Name": {
+                    "name": "DomainName"
+                },
+                "Id": {
+                    "name": "DomainId"
+                },
+                "Asset": {
+                    "name": "Schema",
+                    "Signifier": {
+                        "name": "SchemaFullName"
+                    },
+                    "DisplayName": {
+                        "name": "SchemaDisplayName"
+                    },
+                    "AssetType": {
+                        "name": "SchemaType",
+                        "Id": {
+                            "name": "SchemaTypeId"
+                        }
+                    },
+                    "Relation": [
+                        {
+                            "name": "SchemaContainsTable",
+                            "typeId": "00000000-0000-0000-0000-000000007043",
+                            "type": "Source",
+                            "TargetAsset": {
+                                "name": "Table",
+                                "Signifier": {
+                                    "name": "TableFullName"
+                                },
+                                "DisplayName": {
+                                    "name": "TableDisplayName"
+                                },
+                                "Status": {
+                                    "name": "TableStatus",
+                                    "Signifier": {
+                                        "name": "TableStatusName"
+                                    },
+                                    "Id": {
+                                        "name": "TableStatusId"
+                                    }
+                                },
+                                "StringAttribute": [
+                                    {
+                                        "name": "TableDescription",
+                                        "labelId": "00000000-0000-0000-0000-000000003114",
+                                        "Value": {
+                                            "name": "TableDescriptionValue"
+                                        }
+                                    },
+                                    {
+                                        "name": "TableTransformationLogic",
+                                        "labelId": "00000000-0000-0000-0000-000000000249",
+                                        "Value": {
+                                            "name": "TableTransformationLogicValue"
+                                        }
+                                    },
+                                    {
+                                        "name": "TableRetentiontionPeriod",
+                                        "labelId": "3ad8db1c-8741-4d6c-9e25-6709de693b4d",
+                                        "Value": {
+                                            "name": "TableRetentiontionPeriodValue"
+                                        }
+                                    },
+                                    {
+                                        "name": "TableDataDomain",
+                                        "labelId": "a4d99dff-0894-4d36-8840-833c6af7061f",
+                                        "Value": {
+                                            "name": "TableDataDomainValue"
+                                        }
+                                    },
+                                    {
+                                        "name": "TableDataGovernanceArea",
+                                        "labelId": "46df8f03-28c9-4500-86e8-652cd97dec0d",
+                                        "Value": {
+                                            "name": "TableDataGovernanceAreaValue"
+                                        }
+                                    },
+                                    {
+                                        "name": "TableSchemaVersion",
+                                        "labelId": "7ed19972-bdcb-40ce-a4e4-335b7f4b8d57",
+                                        "Value": {
+                                            "name": "TableSchemaVersionValue"
+                                        }
+                                    }
+                                ],
+                                "BooleanAttribute": [
+                                    {
+                                        "name": "TablePersonallyIdentifiableInformation",
+                                        "labelId": "00000000-0000-0000-0001-000500000029",
+                                        "Value": {
+                                            "name": "TablePersonallyIdentifiableInformationValue"
+                                        }
+                                    },
+                                    {
+                                        "name": "TableSoxScope",
+                                        "labelId": "0c21c804-0849-41f3-a7e5-6a4edacf2ce4",
+                                        "Value": {
+                                            "name": "TableSoxScopeValue"
+                                        }
+                                    }
+                                ],
+                                "SingleValueListAttribute": [
+                                    {
+                                        "name": "TableDataConfidentiality",
+                                        "labelId": "9f6b820a-2cb4-4c69-a58c-08179cfc6d04",
+                                        "Value": {
+                                            "name": "TableDataConfidentialityValue"
+                                        }
+                                    },
+                                    {
+                                        "name": "TablePersonalData",
+                                        "labelId": "53517e0d-f85c-427b-b621-cc6038cbc3d3",
+                                        "Value": {
+                                            "name": "TablePersonalDataValue"
+                                        }
+                                    },
+                                    {
+                                        "name": "TableDataAggregationRisk",
+                                        "labelId": "1575edbc-f97d-4d43-870f-71e11839c157",
+                                        "Value": {
+                                            "name": "TableDataAggregationRiskValue"
+                                        }
+                                    },
+                                    {
+                                        "name": "TableDataExportRestriction",
+                                        "labelId": "7dcac0de-1d3f-4f1a-8285-9727feb89a3b",
+                                        "Value": {
+                                            "name": "TableDataExportRestrictionValue"
+                                        }
+                                    },
+                                    {
+                                        "name": "TableCommerciallySensitiveInformation",
+                                        "labelId": "fff96c64-96f4-4118-aaac-0e251477f7ea",
+                                        "Value": {
+                                            "name": "TableCommerciallySensitiveInformationValue"
+                                        }
+                                    },
+                                    {
+                                        "name": "TableConfidentialTechnicalInformation",
+                                        "labelId": "bd9ef76a-8a8a-4f15-b624-727d4d1cd7b4",
+                                        "Value": {
+                                            "name": "TableConfidentialTechnicalInformationValue"
+                                        }
+                                    },
+                                    {
+                                        "name": "TableSensitivePersonalData",
+                                        "labelId": "d0046128-00e7-48f8-a34f-1d807557865a",
+                                        "Value": {
+                                            "name": "TableSensitivePersonalDataValue"
+                                        }
+                                    },
+                                    {
+                                        "name": "TableDataTypeCategory",
+                                        "labelId": "4a3b3144-a2b2-4a2f-a8b8-0fc536e520f0",
+                                        "Value": {
+                                            "name": "TableDataTypeCategoryValue"
+                                        }
+                                    },
+                                    {
+                                        "name": "TableRetentionPolicy",
+                                        "labelId": "22b5ed13-fc4e-4c9d-94a6-e56112fa62e6",
+                                        "Value": {
+                                            "name": "TableRetentionPolicyValue"
+                                        }
+                                    },
+                                    {
+                                        "name": "TableDataQuality",
+                                        "labelId": "ecd71ae3-4078-40ce-9cde-77f0f8f54ea1",
+                                        "Value": {
+                                            "name": "TableDataQualityValue"
+                                        }
+                                    }
+                                ],
+                                "Filter": {
+                                    "AND": [
+                                        {
+                                            "Field": {
+                                                "name": "TableStatusId",
+                                                "operator": "EQUALS",
+                                                "value": "00000000-0000-0000-0000-000000005009"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "Relation": [
+                                    {
+                                        "name": "TableContainsColumn",
+                                        "typeId": "00000000-0000-0000-0000-000000007042",
+                                        "type": "Target",
+                                        "SourceAsset": {
+                                            "name": "Column",
+                                            "Signifier": {
+                                                "name": "ColumnFullName"
+                                            },
+                                            "DisplayName": {
+                                                "name": "ColumnDisplayName"
+                                            },
+                                            "StringAttribute": [
+                                                {
+                                                    "name": "ColumnDescription",
+                                                    "labelId": "00000000-0000-0000-0000-000000003114",
+                                                    "Value": {
+                                                        "name": "ColumnDescriptionValue"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "ColumnTransformationLogic",
+                                                    "labelId": "00000000-0000-0000-0000-000000000249",
+                                                    "Value": {
+                                                        "name": "ColumnTransformationLogicValue"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "ColumnTargetName",
+                                                    "labelId": "918349a1-d31e-4dcf-9647-858385b3e298",
+                                                    "Value": {
+                                                        "name": "ColumnTargetNameValue"
+                                                    }
+                                                }
+                                            ],
+                                            "BooleanAttribute": [
+                                                {
+                                                    "name": "ColumnSoxScope",
+                                                    "labelId": "0c21c804-0849-41f3-a7e5-6a4edacf2ce4",
+                                                    "Value": {
+                                                        "name": "ColumnSoxScopeValue"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "SkipColumn",
+                                                    "labelId": "28e0eac5-6503-4f0f-9344-2f9eaa367295",
+                                                    "Value": {
+                                                        "name": "SkipColumnValue"
+                                                    }
+                                                }
+                                            ],
+                                            "SingleValueListAttribute": [
+                                                {
+                                                    "name": "ColumnDataConfidentiality",
+                                                    "labelId": "9f6b820a-2cb4-4c69-a58c-08179cfc6d04",
+                                                    "Value": {
+                                                        "name": "ColumnDataConfidentialityValue"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "ColumnPersonalData",
+                                                    "labelId": "53517e0d-f85c-427b-b621-cc6038cbc3d3",
+                                                    "Value": {
+                                                        "name": "ColumnPersonalDataValue"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "ColumnDataAggregationRisk",
+                                                    "labelId": "1575edbc-f97d-4d43-870f-71e11839c157",
+                                                    "Value": {
+                                                        "name": "ColumnDataAggregationRiskValue"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "ColumnCommerciallySensitiveInformation",
+                                                    "labelId": "fff96c64-96f4-4118-aaac-0e251477f7ea",
+                                                    "Value": {
+                                                        "name": "ColumnCommerciallySensitiveInformationValue"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "ConfidentialTechnicalInformation",
+                                                    "labelId": "bd9ef76a-8a8a-4f15-b624-727d4d1cd7b4",
+                                                    "Value": {
+                                                        "name": "ConfidentialTechnicalInformationValue"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "ColumnSensitivePersonalData",
+                                                    "labelId": "d0046128-00e7-48f8-a34f-1d807557865a",
+                                                    "Value": {
+                                                        "name": "ColumnSensitivePersonalDataValue"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "Filter": {
+                        "AND": [
+                            {
+                                "Field": {
+                                    "name": "SchemaTypeId",
+                                    "operator": "EQUALS",
+                                    "value": "00000000-0000-0000-0001-000400000002"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "Filter": {
+                    "AND": [
+                        {
+                            "Field": {
+                                "name": "DomainId",
+                                "operator": "EQUALS",
+                                "value": "1c46d543-01f0-44d3-832c-e1aabf9d9b87"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

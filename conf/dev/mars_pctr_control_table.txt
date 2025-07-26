@@ -1,0 +1,13 @@
+%sql
+CREATE TABLE `cross_ds-unitycatalog-dev`.`curated-fcb`.mars_pctr_control_table (
+  Profit_Center STRING,
+  Ingested_At TIMESTAMP,
+  Ingested_By STRING,
+  Active_Flag STRING)
+USING delta
+LOCATION 'abfss://deltalake@azdna312eunadlslifwiyswa.dfs.core.windows.net/curated/fcb_dev/MARS_PCTR_CONTROL_TABLE'
+TBLPROPERTIES (
+  'delta.checkpoint.writeStatsAsJson' = 'false',
+  'delta.checkpoint.writeStatsAsStruct' = 'true',
+  'delta.minReaderVersion' = '1',
+  'delta.minWriterVersion' = '2');

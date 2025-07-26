@@ -1,0 +1,18 @@
+{
+    "autoscale": {
+        "min_workers": 2,
+        "max_workers": 4
+    },
+    "cluster_name": "{{ cluster_name }}",
+    "spark_version": "15.4.x-scala2.12",
+    "spark_conf": {
+        "spark.databricks.delta.preview.enabled": "true"
+    },
+    "node_type_id": "Standard_F8",
+    "driver_node_type_id": "Standard_F16s_v2",
+    "custom_tags": {},
+    "autotermination_minutes": 30,
+    "enable_elastic_disk": true,
+    "data_security_mode": "USER_ISOLATION",
+    "runtime_engine": "STANDARD"
+}

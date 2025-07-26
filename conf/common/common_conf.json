@@ -1,0 +1,14 @@
+{
+    "catalog_prefix": "cross_ds",
+    "project_name": "adf",
+    "aecorsoft_project_name": "aecorsoft",    
+    "app_name": "ds",
+    "data_topology_group": "DS-CrossDS",
+    "business_domain": "CROSS_DS",
+    "process_config_project_name":"DATTA",
+    "process_order":"2",
+    "process_name":"DLT_WORKFLOW",
+    "dlt_workflow_name":"sede-x-DATTA-FCB-CURATED-workflow",
+    "mars_sp_load_dlt_workflow_name":"sede-x-DATTA-FCB-CURATED-mars-sp-load-workflow",
+    "mars_load_dlt_workflow_name":"sede-x-DATTA-FCB-CURATED-mars-load-workflow"
+}

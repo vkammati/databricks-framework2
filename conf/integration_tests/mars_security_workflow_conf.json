@@ -1,0 +1,116 @@
+{
+  "name": "{{ mars_security_workflow_name }}",
+  "email_notifications": {
+      "on_failure": [
+        "GX-SBOBNG-DLT-Team@shell.com"
+      ],
+      "no_alert_for_skipped_runs": false
+    },
+  "max_concurrent_runs": 1,
+  "format": "MULTI_TASK",
+  "queue": {
+      "enabled": true
+  },
+  "tags": {
+      "workflow_project": "DATTA-FCB_CURATED-MARS-SECURITY"
+  },
+  "tasks": [
+    {
+        "task_key": "mars_view_creation",
+        "run_if": "ALL_SUCCESS",
+        "notebook_task": {
+          "notebook_path": "{{ repos_path }}/datta_pipeline_library/transformation/eh_curated/mars_security_view",
+          "base_parameters": {
+            "security_schema": "eh-ds-security",
+            "margin_bucket_collection_table_name": "use_case_mars_margin_bucket_collection",
+            "margin_bucket_collection_view_name": "vw_use_case_mars_margin_bucket_collection",
+            "unique_repo_branch_id_schema": "",
+            "mars_data_dump_output_table_name": "use_case_mars_data_dump_output",
+            "unique_repo_branch_id": "",
+            "mars_data_dump_output_view_name": "vw_use_case_mars_data_dump_output",
+            "security_function_name": "sf_gen_rls_security",
+            "repos_path": "{{ repos_path }}",
+            "env": "{{ env }}"
+          },
+          "source": "WORKSPACE"
+        },
+        "job_cluster_key": "sede-x-DATTA-FCB-CURATED-mars-security-workflow_job_cluster",
+        "timeout_seconds": 0,
+        "email_notifications": {},
+        "notification_settings": {
+          "no_alert_for_skipped_runs": false,
+          "no_alert_for_canceled_runs": false,
+          "alert_on_last_attempt": false
+        },
+        "webhook_notifications": {}
+      },
+      {
+        "task_key": "mars_dynamic_sql_function_creation",
+        "depends_on": [
+          {
+            "task_key": "mars_view_creation"
+          }
+        ],
+        "run_if": "ALL_SUCCESS",
+        "notebook_task": {
+          "notebook_path": "{{ repos_path }}/datta_pipeline_library/transformation/eh_curated/mars_dynamic_sql_function",
+          "base_parameters": {
+            "mars_mbc_view_name": "vw_use_case_mars_margin_bucket_collection",
+            "mars_ddo_view_name": "vw_use_case_mars_data_dump_output",
+            "mars_mbc_security_function_name": "sf_mars_margin_bucket_collection_report",
+            "mars_ddo_security_function_name": "sf_mars_data_dump_output_report",
+            "mars_stocks_security_function_name": "sf_mars_stocks_report",
+            "mars_na_ed_cso_hedge_security_function_name": "sf_mars_na_ed_cso_hedge_report",
+            "mars_mass_balance_check_security_function_name": "sf_mars_mass_balance_check_report",
+            "mars_gl_account_check_function_name": "sf_mars_gl_account_check_report",
+            "mars_sfs_check_security_function_name": "sf_mars_sfs_check_report",
+            "mars_submission_security_function_name": "sf_mars_submission_report",
+            "unique_repo_branch_id_schema": "",
+            "unique_repo_branch_id": "",
+            "repos_path": "{{ repos_path }}",
+            "env": "{{ env }}"
+          },
+          "source": "WORKSPACE"
+        },
+        "job_cluster_key": "sede-x-DATTA-FCB-CURATED-mars-security-workflow_job_cluster",
+        "timeout_seconds": 0,
+        "email_notifications": {},
+        "notification_settings": {
+          "no_alert_for_skipped_runs": false,
+          "no_alert_for_canceled_runs": false,
+          "alert_on_last_attempt": false
+        },
+        "webhook_notifications": {}
+      }
+  ],
+  "job_clusters": [
+      {
+        "job_cluster_key": "sede-x-DATTA-FCB-CURATED-mars-security-workflow_job_cluster",
+        "new_cluster": {
+          "cluster_name": "",
+          "spark_version": "15.4.x-scala2.12",
+          "spark_conf": {
+            "spark.databricks.delta.preview.enabled": "true"
+          },
+          "azure_attributes": {
+            "first_on_demand": 1,
+            "availability": "ON_DEMAND_AZURE",
+            "spot_bid_max_price": -1
+          },
+          "node_type_id": "Standard_D4ds_v5",
+          "custom_tags": {
+            "Name": "DATTA-FCB-CURATED-MARS-SECURITY_JC",
+            "Environment": "{{ env }}"
+          },
+          "spark_env_vars": {
+            "PYSPARK_PYTHON": "/databricks/python3/bin/python3"
+          },
+          "enable_elastic_disk": true,
+          "data_security_mode": "USER_ISOLATION",
+          "runtime_engine": "STANDARD",
+          "num_workers": 2
+        }
+      }
+    ],
+  "timeout_seconds": 0
+}

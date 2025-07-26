@@ -1,0 +1,81 @@
+{
+  "name": "{{ optimize_vacuum_workflow_name }}",
+  "email_notifications": {
+      "on_failure": [
+        "GX-SBOBNG-DLT-Team@shell.com"
+      ],
+      "no_alert_for_skipped_runs": false
+    },
+  "max_concurrent_runs": 1,
+  "schedule": {
+            "quartz_cron_expression": "19 30 19 ? * Sat",
+            "timezone_id": "UTC",
+            "pause_status": "UNPAUSED"
+        },
+  "format": "MULTI_TASK",
+  "queue": {
+      "enabled": true
+  },
+  "tags": {
+      "workflow_project": "DATTA-FCB-CURATED-OPTIMIZE-VACUUM"
+  },
+  "tasks": [
+    {
+        "task_key": "optimize_vacuum_eh_curated_tables",
+        "run_if": "ALL_SUCCESS",
+        "notebook_task": {
+          "notebook_path": "{{ repos_path }}/datta_fcb_curated/optimize_and_vacuum",
+          "base_parameters": {
+            "unique_repo_branch_id_schema": "",
+            "unique_repo_branch_id": "",
+            "repos_path": "{{ repos_path }}",
+            "env": "{{ env }}"
+          },
+          "source": "WORKSPACE"
+        },
+        "job_cluster_key": "sede-x-DATTA-FCB-CURATED-optimize-vacuum-workflow_job_cluster",
+        "timeout_seconds": 0,
+        "email_notifications": {},
+        "notification_settings": {
+          "no_alert_for_skipped_runs": false,
+          "no_alert_for_canceled_runs": false,
+          "alert_on_last_attempt": false
+        },
+        "webhook_notifications": {}
+      }
+  ],
+  "job_clusters": [
+      {
+        "job_cluster_key": "sede-x-DATTA-FCB-CURATED-optimize-vacuum-workflow_job_cluster",
+        "new_cluster": {
+          "cluster_name": "",
+          "spark_version": "15.4.x-scala2.12",
+          "spark_conf": {
+            "spark.databricks.delta.preview.enabled": "true"
+          },
+          "azure_attributes": {
+            "first_on_demand": 1,
+            "availability": "ON_DEMAND_AZURE",
+            "spot_bid_max_price": -1
+          },
+          "node_type_id": "Standard_F8s_v2",
+          "driver_node_type_id": "Standard_F64s_v2",
+          "custom_tags": {
+            "Name": "DATTA-FCB-CURATED-OPTIMIZE-VACUUM_JC",
+            "Environment": "{{ env }}"
+          },
+          "spark_env_vars": {
+            "PYSPARK_PYTHON": "/databricks/python3/bin/python3"
+          },
+          "enable_elastic_disk": true,
+          "data_security_mode": "USER_ISOLATION",
+          "runtime_engine": "STANDARD",
+          "autoscale": {
+            "min_workers": 2,
+            "max_workers": 8
+          }
+        }
+      }
+    ],
+  "timeout_seconds": 0
+}

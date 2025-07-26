@@ -1,0 +1,8 @@
+%sql
+CREATE TABLE `cross_ds-unitycatalog-dev`.`curated-fcb`.mars_material_control_table (
+  Material_Key STRING,
+  Source STRING,
+  Ingested_At TIMESTAMP,
+  Ingested_By STRING,
+  Active_Flag STRING
+) USING delta LOCATION 'abfss://deltalake@azdna312eunadlslifwiyswa.dfs.core.windows.net/curated/fcb_dev/MARS_MATERIAL_CONTROL_TABLE';
